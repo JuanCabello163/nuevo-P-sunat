@@ -19,5 +19,6 @@ return array(
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
     'Greenter\\XMLSecLibs\\' => array($vendorDir . '/greenter/xmldsig/src'),
     'Greenter\\Sunat\\GRE\\' => array($vendorDir . '/greenter/gre-api/src'),
+    'Greenter\\Sunat\\ConsultaCpe\\' => array($vendorDir . '/greenter/consulta-cpe/src'),
     'Greenter\\' => array($vendorDir . '/greenter/core/src/Core', $vendorDir . '/greenter/lite/src/Greenter', $vendorDir . '/greenter/ws/src', $vendorDir . '/greenter/xml/src'),
 );

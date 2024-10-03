@@ -44,6 +44,7 @@ class ComposerStaticInitaa0ee1b690fc5089c32ccde65eee8779
             'GuzzleHttp\\' => 11,
             'Greenter\\XMLSecLibs\\' => 20,
             'Greenter\\Sunat\\GRE\\' => 19,
+            'Greenter\\Sunat\\ConsultaCpe\\' => 27,
             'Greenter\\' => 9,
         ),
     );
@@ -101,6 +102,10 @@ class ComposerStaticInitaa0ee1b690fc5089c32ccde65eee8779
         'Greenter\\Sunat\\GRE\\' => 
         array (
             0 => __DIR__ . '/..' . '/greenter/gre-api/src',
+        ),
+        'Greenter\\Sunat\\ConsultaCpe\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/greenter/consulta-cpe/src',
         ),
         'Greenter\\' => 
         array (

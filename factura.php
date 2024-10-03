@@ -36,38 +36,51 @@ $company = (new Company())
     ->setAddress($address);
 
 // Venta
+// Recibir los datos del formulario
+$fechaEmision = $_POST['fechaEmision'] ?? '';
+$mtoOperGravadas = $_POST['mtoOperGravadas'] ?? 0;
+$codProducto = $_POST['codProducto'] ?? '';
+$cantidad = $_POST['cantidad'] ?? 0;
+$mtoValorUnitarioDetalle = $_POST['mtoValorUnitarioDetalle'] ?? 0;
+$descripcion = $_POST['descripcion'] ?? '';
+
+// Mostrar los valores de las variables
+var_dump($cantidad);
+var_dump($mtoValorUnitarioDetalle);
+
+// Calcular el valor de venta
+$valorVenta = $cantidad * $mtoValorUnitarioDetalle;
+
+// Calcular el monto importe venta
+$montoImpVenta = $valorVenta * 1.18;
+
+// Crear la factura
 $invoice = (new Invoice())
     ->setUblVersion('2.1')
     ->setTipoOperacion('0101') // Venta - Catalog. 51
     ->setTipoDoc('01') // Factura - Catalog. 01 
     ->setSerie('F001')
     ->setCorrelativo('1')
-    ->setFechaEmision(new DateTime('2020-08-24 13:05:00-05:00')) // Zona horaria: Lima
+    ->setFechaEmision(new DateTime($fechaEmision)) // Zona horaria: Lima
     ->setFormaPago(new FormaPagoContado()) // FormaPago: Contado
     ->setTipoMoneda('PEN') // Sol - Catalog. 02
     ->setCompany($company)
     ->setClient($client)
-    ->setMtoOperGravadas(100.00)
-    ->setMtoIGV(18.00)
-    ->setTotalImpuestos(18.00)
-    ->setValorVenta(100.00)
-    ->setSubTotal(118.00)
-    ->setMtoImpVenta(118.00)
+    ->setMtoOperGravadas($mtoOperGravadas)
+    ->setValorVenta($valorVenta)
+    ->setMtoImpVenta($montoImpVenta)
     ;
 
-$item = (new SaleDetail())
-    ->setCodProducto('P001')
+    $item = (new SaleDetail())
+    ->setCodProducto($codProducto)
     ->setUnidad('NIU') // Unidad - Catalog. 03
-    ->setCantidad(2)
-    ->setMtoValorUnitario(50.00)
-    ->setDescripcion('PRODUCTO 1')
-    ->setMtoBaseIgv(100)
+    ->setCantidad($cantidad)
+    ->setMtoValorUnitario($mtoValorUnitarioDetalle) // Cambia el nombre de la variable
+    ->setDescripcion($descripcion)
+    ->setMtoBaseIgv($mtoValorUnitarioDetalle * $cantidad)
     ->setPorcentajeIgv(18.00) // 18%
-    ->setIgv(18.00)
     ->setTipAfeIgv('10') // Gravado Op. Onerosa - Catalog. 07
-    ->setTotalImpuestos(18.00) // Suma de impuestos en el detalle
-    ->setMtoValorVenta(100.00)
-    ->setMtoPrecioUnitario(59.00)
+    ->setMtoValorVenta($valorVenta)
     ;
 
 $legend = (new Legend())
@@ -79,6 +92,42 @@ $invoice->setDetails([$item])
 
 $result = $see->send($invoice);
 
+// Calcula el valor de venta y monto importe venta
+$valorVenta = $mtoOperGravadas;
+$montoImpVenta = $valorVenta + 18;
+
+// Actualiza el valor de los campos
+echo "Factura creada con éxito:\n";
+echo "Fecha de emisión: " . $fechaEmision . "\n";
+echo "Monto operaciones gravadas: " . $mtoOperGravadas . "\n";
+echo "Monto IGV: 18\n";
+echo "Valor venta: " . $valorVenta . "\n";
+echo "Monto importe venta: " . $montoImpVenta . "\n";
+echo "Código producto: " . $codProducto . "\n";
+echo "Cantidad: " . $cantidad . "\n";
+echo "Monto valor unitario: " . $mtoValorUnitarioDetalle . "\n";
+echo "Descripción: " . $descripcion . "\n";
+
+// Muestra el resultado en el HTML
+?>
+<html>
+  <body>
+    <h2>Factura</h2>
+    <iframe src="factura.php" frameborder="0" width="100%" height="500"></iframe>
+    <p>Fecha de emisión: <?php echo $fechaEmision; ?></p>
+    <p>Monto operaciones gravadas: <?php echo $mtoOperGravadas; ?></p>
+    <p>Monto IGV: 18</p>
+    <p>Valor venta: <?php echo $valorVenta; ?></p>
+    <p>Monto importe venta: <?php echo $montoImpVenta; ?></p>
+    <p>Código producto: <?php echo $codProducto; ?></p>
+    <p>Cantidad: <?php echo $cantidad; ?></p>
+    <p>Monto valor unitario: <?php echo $mtoValorUnitarioDetalle; ?></p>
+    <p>Descripción: <?php echo $descripcion; ?></p>
+  </body>
+</html>
+
+
+<?php
 // Guardar XML firmado digitalmente.
 file_put_contents($invoice->getName().'.xml',
                     $see->getFactory()->getLastXml());
